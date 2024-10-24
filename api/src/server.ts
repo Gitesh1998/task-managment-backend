@@ -1,9 +1,16 @@
 import express from 'express'
 import payload from 'payload'
+import cors from 'cors'
 
 require('dotenv').config()
 const app = express()
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:3001', // Allow requests from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+}));
 
 // Redirect root to Admin panel
 app.get('/', (_, res) => {

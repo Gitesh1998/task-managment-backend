@@ -5,12 +5,6 @@ const Tasks: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
   },
-//   access: {
-//     create: ({ req: { user } }) => !!user, // Only authenticated users can create tasks
-//     read: ({ req: { user } }) => !!user, // Only authenticated users can read tasks
-//     update: ({ req: { user } }) => !!user, // Only authenticated users can update tasks
-//     delete: ({ req: { user } }) => !!user, // Only authenticated users can delete tasks
-//   },
   fields: [
     {
       name: 'title',
