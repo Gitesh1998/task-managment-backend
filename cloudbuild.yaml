@@ -1,0 +1,19 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend-app', '.']
+
+  # Step 2: Push the Docker image to GCR
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/backend-app']
+
+  # Step 3: Optional - Verify the image (check if it was successfully pushed)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        gcloud container images list-tags gcr.io/$PROJECT_ID/backend-app
+
+images:
+  - 'gcr.io/$PROJECT_ID/backend-app'

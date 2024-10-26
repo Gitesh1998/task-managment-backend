@@ -1,27 +1,43 @@
-FROM node:18.8-alpine as base
+# Use the official Node.js LTS image
+FROM node:18-alpine as base
 
-FROM base as builder
+# Set the working directory in the container
+WORKDIR /app
 
-WORKDIR /home/node/app
+# Install essential build tools (for sharp and other native modules)
+RUN apk add --no-cache libc6-compat python3 make g++
+
+# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
+# Install all dependencies (including dev dependencies for building)
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
-RUN yarn install
-RUN yarn build
 
-FROM base as runtime
+COPY .env .env
 
-ENV NODE_ENV=production
-ENV PAYLOAD_CONFIG_PATH=dist/payload.config.js
 
-WORKDIR /home/node/app
-COPY package*.json  ./
-COPY yarn.lock ./
+# Build the application (PayloadCMS + TypeScript)
+RUN npm run build
 
-RUN yarn install --production
-COPY --from=builder /home/node/app/dist ./dist
-COPY --from=builder /home/node/app/build ./build
+# Use a new, clean image to reduce final image size
+FROM node:18-alpine as runtime
 
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy only necessary files from the build stage
+COPY --from=base /app/package*.json ./
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Expose the backend on port 3000
 EXPOSE 3000
 
-CMD ["node", "dist/server.js"]
+# Start the Node.js application
+CMD ["npm", "run", "serve"]
