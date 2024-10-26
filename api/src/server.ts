@@ -42,7 +42,6 @@ app.get('/api/tasks', async (req, res) => {
     const tasks = await payload.find({
       collection: 'tasks',
       where: {}, // You can customize the query here
-      user: req.user,
     });
     res.status(200).json(tasks);
   } catch (err) {
@@ -52,6 +51,8 @@ app.get('/api/tasks', async (req, res) => {
 
 // Custom PUT endpoint to update a specific task by ID
 app.put('/api/tasks/:id', async (req, res) => {
+  console.log("req.body: ", req.body);
+  
   try {
     const updatedTask = await payload.update({
       collection: 'tasks',

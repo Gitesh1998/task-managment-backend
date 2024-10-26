@@ -22,19 +22,19 @@ const Tasks: CollectionConfig = {
       options: [
         {
           label: 'Pending',
-          value: 'pending',
+          value: 'Pending',
         },
         {
           label: 'In Progress',
-          value: 'in_progress',
+          value: 'In_Progress',
         },
         {
           label: 'Completed',
-          value: 'completed',
+          value: 'Completed',
         },
       ],
       required: true,
-      defaultValue: 'pending',
+      defaultValue: 'Pending',
     },
   ],
 };
